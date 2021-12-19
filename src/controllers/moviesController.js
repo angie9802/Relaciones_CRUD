@@ -2,6 +2,7 @@ const path = require('path');
 const db = require('../database/models');
 const sequelize = db.sequelize;
 const { Op, association } = require("sequelize");
+const { validationResult } = require('express-validator');
 
 
 //Aqui tienen una forma de llamar a cada uno de los modelos
@@ -60,6 +61,19 @@ const moviesController = {
             })
     },
     create: function (req,res) {
+        const resultValidation = validationResult(req)
+
+        if(resultValidation.errors.length > 0){
+            return Genres.findAll()
+            .then(allGenres => {
+                res.render('moviesAdd.ejs', {
+                    allGenres : allGenres,
+                    errors : resultValidation.mapped(),
+                    oldData: req.body
+                })
+            })
+        }
+
         Movies.create({
             title : req.body.title,
             rating : req.body.rating,
@@ -82,6 +96,25 @@ const moviesController = {
             })
     },
     update: function (req,res) {
+        const resultValidation = validationResult(req)
+        let reqMovies = Movies.findByPk(req.params.id,{
+            include: ["genre"]
+        })
+        let reqGenres = Genres.findAll()
+
+        if(resultValidation.errors.length > 0){
+            return Promise.all([reqMovies,reqGenres])
+            .then(([Movie,allGenres])=>{
+                res.render('moviesEdit.ejs',{
+                    Movie : Movie, 
+                    allGenres : allGenres,
+                    errors : resultValidation.mapped(),
+                    oldData: req.body
+                })
+            })
+            
+        }
+
         Movies.update({
             title : req.body.title,
             rating : req.body.rating,
@@ -94,7 +127,7 @@ const moviesController = {
                 id :req.params.id
             }
         })
-        res.redirect('/movies/detail/'+req.params.id)
+        res.redirect('/movies')
     },
     delete: function (req,res) {
         Movies.findByPk(req.params.id)

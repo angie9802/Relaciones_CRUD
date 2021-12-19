@@ -43,3 +43,7 @@ figure{
   margin: auto;
   width: 20%;
 }
+.text-danger{
+  font-size: 11px;
+  color: rgb(218, 1, 1);
+}
