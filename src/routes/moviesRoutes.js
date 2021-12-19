@@ -30,8 +30,8 @@ router.get('/movies/detail/:id', moviesController.detail);
 router.get('/movies/add', moviesController.add);
 router.post('/movies/create', validationsCreate ,moviesController.create);
 router.get('/movies/edit/:id', moviesController.edit);
-router.post('/movies/update/:id', validationsUpdate,moviesController.update);
+router.put('/movies/update/:id', validationsUpdate,moviesController.update);
 router.get('/movies/delete/:id', moviesController.delete);
-router.post('/movies/delete/:id', moviesController.destroy);
+router.delete('/movies/delete/:id', moviesController.destroy);
 
 module.exports = router;

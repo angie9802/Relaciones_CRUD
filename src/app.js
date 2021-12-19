@@ -6,8 +6,11 @@ const indexRouter = require('./routes/index');
 
 const moviesRoutes = require('./routes/moviesRoutes');
 const genresRoutes = require('./routes/genresRoutes');
+const methodOverride = require('method-override')
+
 const app = express();
 
+app.use(methodOverride('_method'))
 // view engine setup
 app.set('views', path.resolve(__dirname, './views'));
 app.set('view engine', 'ejs');
